@@ -25,13 +25,19 @@ async function fetchWithAuth<T>(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
   let response: Response;
   try {
     response = await fetch(`${API_BASE}${url}`, {
       ...options,
       headers,
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
   } catch (err) {
+    clearTimeout(timeoutId);
     throw new NetworkError(
       err instanceof Error ? err.message : 'Network error. Please check your connection.'
     );

@@ -278,8 +278,11 @@ export default function Settings() {
   /* ---- Actions ---- */
   const handleTestConnection = useCallback(async () => {
     setConnStatus('testing');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
-      const resp = await fetch(`${ollamaUrl}/api/tags`, { method: 'GET' });
+      const resp = await fetch(`${ollamaUrl}/api/tags`, { method: 'GET', signal: controller.signal });
+      clearTimeout(timeoutId);
       if (resp.ok) {
         setConnStatus('connected');
         toast.success('Connection successful');
@@ -288,6 +291,7 @@ export default function Settings() {
         toast.error(`Connection failed: ${resp.status} ${resp.statusText}`);
       }
     } catch (err) {
+      clearTimeout(timeoutId);
       setConnStatus('failed');
       toast.error(err instanceof Error ? err.message : 'Connection failed');
     }
@@ -353,32 +357,60 @@ export default function Settings() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setProvider('ollama');
-    setOllamaUrl('http://localhost:11434');
-    setOllamaModel(OLLAMA_MODELS[0]);
-    setOpenaiKey('');
-    setOpenaiModel(OPENAI_MODELS[0]);
-    setAnthropicKey('');
-    setAnthropicModel(ANTHROPIC_MODELS[0]);
-    setKimiKey('');
-    setKimiModel(KIMI_MODELS[0]);
-    setGeminiKey('');
-    setGeminiModel(GEMINI_MODELS[0]);
-    setTemperature(0.7);
-    setMaxTokens(4096);
-    setFeeds(DEFAULT_FEEDS);
-    setNewsApiEnabled(false);
-    setNewsApiKey('');
-    setWebScrapingEnabled(false);
-    setScrapeDomains('example.com');
-    setScrapeRateLimit('10');
-    setApiKeys(DEFAULT_API_KEYS);
-    setDensity('default');
-    setNotifyAnalysis(true);
-    setNotifyPlan(true);
-    setNotifyError(true);
-    setDataRetention('30');
-    setHasChanges(true);
+    const resetState = {
+      provider: 'ollama' as Provider,
+      ollamaUrl: 'http://localhost:11434',
+      ollamaModel: OLLAMA_MODELS[0],
+      openaiKey: '',
+      openaiModel: OPENAI_MODELS[0],
+      anthropicKey: '',
+      anthropicModel: ANTHROPIC_MODELS[0],
+      kimiKey: '',
+      kimiModel: KIMI_MODELS[0],
+      geminiKey: '',
+      geminiModel: GEMINI_MODELS[0],
+      temperature: 0.7,
+      maxTokens: 4096,
+      feeds: DEFAULT_FEEDS,
+      newsApiEnabled: false,
+      newsApiKey: '',
+      webScrapingEnabled: false,
+      scrapeDomains: 'example.com',
+      scrapeRateLimit: '10',
+      apiKeys: DEFAULT_API_KEYS,
+      density: 'default' as DensityOption,
+      notifyAnalysis: true,
+      notifyPlan: true,
+      notifyError: true,
+      dataRetention: '30' as RetentionOption,
+    };
+    setProvider(resetState.provider);
+    setOllamaUrl(resetState.ollamaUrl);
+    setOllamaModel(resetState.ollamaModel);
+    setOpenaiKey(resetState.openaiKey);
+    setOpenaiModel(resetState.openaiModel);
+    setAnthropicKey(resetState.anthropicKey);
+    setAnthropicModel(resetState.anthropicModel);
+    setKimiKey(resetState.kimiKey);
+    setKimiModel(resetState.kimiModel);
+    setGeminiKey(resetState.geminiKey);
+    setGeminiModel(resetState.geminiModel);
+    setTemperature(resetState.temperature);
+    setMaxTokens(resetState.maxTokens);
+    setFeeds(resetState.feeds);
+    setNewsApiEnabled(resetState.newsApiEnabled);
+    setNewsApiKey(resetState.newsApiKey);
+    setWebScrapingEnabled(resetState.webScrapingEnabled);
+    setScrapeDomains(resetState.scrapeDomains);
+    setScrapeRateLimit(resetState.scrapeRateLimit);
+    setApiKeys(resetState.apiKeys);
+    setDensity(resetState.density);
+    setNotifyAnalysis(resetState.notifyAnalysis);
+    setNotifyPlan(resetState.notifyPlan);
+    setNotifyError(resetState.notifyError);
+    setDataRetention(resetState.dataRetention);
+    initialValuesRef.current = JSON.stringify(resetState);
+    setHasChanges(false);
     // Clear all localStorage keys
     Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
     toast.info('Settings reset to defaults');
@@ -881,6 +913,7 @@ export default function Settings() {
                                 onClick={() => handleDeleteFeed(feed.id)}
                                 className="h-8 w-8"
                                 style={{ color: statusError }}
+                                aria-label={t('settings.dataSources.deleteFeed')}
                               >
                                 <Trash2 size={14} />
                               </Button>
@@ -1140,6 +1173,7 @@ export default function Settings() {
                           onClick={() => openEditKey(key.service)}
                           className="h-8 w-8"
                           style={{ color: accentCyan }}
+                          aria-label={t('settings.apiKeys.editKey', { service: key.service })}
                         >
                           <Pencil size={14} />
                         </Button>
@@ -1150,6 +1184,7 @@ export default function Settings() {
                             onClick={() => openDeleteKey(key.service)}
                             className="h-8 w-8"
                             style={{ color: statusError }}
+                            aria-label={t('settings.apiKeys.deleteKey', { service: key.service })}
                           >
                             <Trash2 size={14} />
                           </Button>

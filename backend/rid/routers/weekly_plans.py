@@ -93,7 +93,11 @@ async def create_weekly_plan(
 
 
 @router.get("/{plan_id}", response_model=WeeklyPlanResponse)
-async def get_weekly_plan(plan_id: int, db: AsyncSession = Depends(get_db)):
+async def get_weekly_plan(
+    plan_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Get a single weekly plan by ID."""
     plan = await db.get(WeeklyPlan, plan_id)
     if not plan:

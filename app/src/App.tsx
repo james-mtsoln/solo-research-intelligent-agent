@@ -1,5 +1,5 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { lazy, Suspense, Component, type ReactNode } from 'react'
+import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, Component, type ReactNode, useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import RouteGuard from './components/RouteGuard'
 import Layout from './components/Layout'
@@ -58,8 +58,14 @@ function LoadingFallback() {
 /* Redirect authenticated users away from login page */
 function LoginRedirect() {
   const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
   if (isAuthenticated) {
-    return <Navigate to="/" replace />
+    return null
   }
   return <Login />
 }

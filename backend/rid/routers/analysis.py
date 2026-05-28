@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -55,6 +54,7 @@ async def list_analysis(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
 ):
     """List analyses with optional filters."""
     query = select(Analysis)
@@ -69,7 +69,11 @@ async def list_analysis(
 
 
 @router.get("/{analysis_id}", response_model=AnalysisResponse)
-async def get_analysis(analysis_id: int, db: AsyncSession = Depends(get_db)):
+async def get_analysis(
+    analysis_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Get a single analysis."""
     analysis = await db.get(Analysis, analysis_id)
     if not analysis:

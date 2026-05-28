@@ -123,7 +123,7 @@ function Toast({
     <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 rounded-radius-lg border border-status-success/25 bg-bg-elevated px-4 py-3 shadow-lg">
       <Check size={16} className="text-status-success" />
       <span className="text-sm text-text-primary">{message}</span>
-      <button onClick={onClose} className="text-text-muted hover:text-text-secondary">
+      <button onClick={onClose} className="text-text-muted hover:text-text-secondary" aria-label="Close toast">
         <X size={14} />
       </button>
     </div>
@@ -431,6 +431,7 @@ export default function UserManagement() {
                         onClick={() => openRoleDialog(u)}
                         className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-secondary"
                         title="Change role"
+                        aria-label={`Change role for ${u.name}`}
                       >
                         <Edit3 size={14} />
                       </button>
@@ -438,6 +439,7 @@ export default function UserManagement() {
                         onClick={() => handleDeactivateUser(u.id)}
                         className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-muted transition-colors hover:bg-status-error/10 hover:text-status-error"
                         title={u.is_active ? 'Deactivate' : 'Activate'}
+                        aria-label={u.is_active ? `Deactivate ${u.name}` : `Activate ${u.name}`}
                       >
                         <UserX size={14} />
                       </button>
@@ -536,6 +538,7 @@ export default function UserManagement() {
                               onClick={() => handleResendInvitation(inv.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-secondary"
                               title="Resend"
+                              aria-label={`Resend invitation to ${inv.email}`}
                             >
                               <Send size={14} />
                             </button>
@@ -543,6 +546,7 @@ export default function UserManagement() {
                               onClick={() => handleCopyLink(inv.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-secondary"
                               title="Copy link"
+                              aria-label={`Copy invitation link for ${inv.email}`}
                             >
                               {copiedId === inv.id ? (
                                 <Check size={14} className="text-status-success" />
@@ -554,6 +558,7 @@ export default function UserManagement() {
                               onClick={() => handleCancelInvitation(inv.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-muted transition-colors hover:bg-status-error/10 hover:text-status-error"
                               title="Cancel"
+                              aria-label={`Cancel invitation for ${inv.email}`}
                             >
                               <Trash2 size={14} />
                             </button>

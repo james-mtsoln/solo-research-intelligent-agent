@@ -432,6 +432,7 @@ function CreateTopicModal({ onClose, onCreate }: { onClose: () => void; onCreate
             style={{ color: TEXT_TERTIARY }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BG_SURFACE)}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+            aria-label={t('common.close')}
           >
             <X size={18} />
           </button>

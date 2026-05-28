@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,12 +39,25 @@ logger = logging.getLogger("rid.main")
 # App factory
 # ---------------------------------------------------------------------------
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("RID backend starting up …")
+    await init_db()
+    await init_default_admin()
+    await _seed_defaults()
+    logger.info("RID backend ready on http://%s:%d", settings.host, settings.port)
+    yield
+    logger.info("RID backend shutting down …")
+    await close_db()
+
+
 app = FastAPI(
     title="Research Intelligence Dashboard",
     description="Backend engine for the Research Intelligence Dashboard (RID).",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # CORS — allow the React frontend to talk to us
@@ -69,25 +83,6 @@ app.include_router(plans, prefix="/api/plans", tags=["Business Plans"])
 app.include_router(agents, prefix="/api/agents", tags=["Agents & Plugins"])
 app.include_router(pipeline, prefix="/api/pipeline", tags=["Pipeline"])
 app.include_router(settings_router, prefix="/api/settings", tags=["Settings"])
-
-
-# ---------------------------------------------------------------------------
-# Lifecycle events
-# ---------------------------------------------------------------------------
-
-@app.on_event("startup")
-async def on_startup() -> None:
-    logger.info("RID backend starting up …")
-    await init_db()
-    await init_default_admin()
-    await _seed_defaults()
-    logger.info("RID backend ready on http://%s:%d", settings.host, settings.port)
-
-
-@app.on_event("shutdown")
-async def on_shutdown() -> None:
-    logger.info("RID backend shutting down …")
-    await close_db()
 
 
 # ---------------------------------------------------------------------------

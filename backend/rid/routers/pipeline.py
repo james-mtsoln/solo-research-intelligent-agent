@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,7 +61,7 @@ async def run_pipeline(
             step = PipelineStep(data.step)
         except ValueError:
             valid = [s.value for s in PipelineStep]
-            raise HTTPException(status_code=400, detail=f"Invalid step. Valid: {valid}")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid step. Valid: {valid}")
         result = await pipeline.run_step(data.weekly_plan_id, step)
         return {
             "weekly_plan_id": data.weekly_plan_id,
@@ -78,7 +78,10 @@ async def run_pipeline(
 
 
 @router.get("/status/{weekly_plan_id}", response_model=PipelineStatusResponse)
-async def get_pipeline_status(weekly_plan_id: int):
+async def get_pipeline_status(
+    weekly_plan_id: int,
+    current_user: User = Depends(get_current_active_user),
+):
     """Get pipeline status for a weekly plan."""
     pipeline = _get_pipeline()
     status = pipeline.get_status(weekly_plan_id)
@@ -95,7 +98,7 @@ async def get_pipeline_status(weekly_plan_id: int):
 
 
 @router.get("/steps")
-async def list_steps():
+async def list_steps(current_user: User = Depends(get_current_active_user)):
     """List available pipeline steps."""
     return {
         "steps": [

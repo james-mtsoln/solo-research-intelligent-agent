@@ -119,7 +119,7 @@ async def create_setting(
     """Create a new setting."""
     existing = await db.execute(select(Setting).where(Setting.key == data.key))
     if existing.scalar_one_or_none():
-        raise HTTPException(status_code=409, detail=f"Setting '{data.key}' already exists")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Setting '{data.key}' already exists")
     setting = Setting(key=data.key, value=data.value, category=data.category)
     db.add(setting)
     await db.commit()
@@ -137,7 +137,7 @@ async def delete_setting(
     result = await db.execute(select(Setting).where(Setting.key == key))
     row = result.scalar_one_or_none()
     if not row:
-        raise HTTPException(status_code=404, detail="Setting not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Setting not found")
     await db.delete(row)
     await db.commit()
     return {"detail": "Setting deleted", "key": key}

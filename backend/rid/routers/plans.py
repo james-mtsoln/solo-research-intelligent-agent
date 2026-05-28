@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -83,7 +83,11 @@ async def list_plans(
 
 
 @router.get("/{plan_id}", response_model=PlanResponse)
-async def get_plan(plan_id: int, db: AsyncSession = Depends(get_db)):
+async def get_plan(
+    plan_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Get a business plan with its milestones."""
     result = await db.execute(
         select(BusinessPlan).where(BusinessPlan.id == plan_id).options(selectinload(BusinessPlan.milestones))
@@ -163,7 +167,11 @@ async def delete_plan(
 # ---------------------------------------------------------------------------
 
 @router.get("/{plan_id}/milestones")
-async def list_milestones(plan_id: int, db: AsyncSession = Depends(get_db)):
+async def list_milestones(
+    plan_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """List milestones for a plan."""
     result = await db.execute(
         select(Milestone).where(Milestone.plan_id == plan_id).order_by(Milestone.target_date)

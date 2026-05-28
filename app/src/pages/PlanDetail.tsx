@@ -553,7 +553,7 @@ export default function PlanDetail() {
       </motion.div>
 
       {/* ====== TABS ====== */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="plan-detail-tabs w-full">
         <div
           className="sticky top-0 z-10 border-b px-4 sm:px-6 lg:px-10"
           style={{ backgroundColor: COLORS.bgSurface, borderColor: COLORS.borderSubtle }}
@@ -590,9 +590,9 @@ export default function PlanDetail() {
           </TabsList>
         </div>
 
-        {/* Override active tab styling via CSS-in-JS on the trigger elements */}
+        {/* Override active tab styling scoped to this component */}
         <style>{`
-          [data-state="active"] {
+          .plan-detail-tabs [data-state="active"] {
             color: ${COLORS.accentCyan} !important;
             border-bottom-color: ${COLORS.accentCyan} !important;
           }

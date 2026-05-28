@@ -68,13 +68,13 @@ async def list_news(
             dt_from = datetime.fromisoformat(date_from)
             query = query.where(NewsArticle.fetched_at >= dt_from)
         except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid date_from: {date_from!r}")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid date_from: {date_from!r}")
     if date_to:
         try:
             dt_to = datetime.fromisoformat(date_to)
             query = query.where(NewsArticle.fetched_at <= dt_to)
         except ValueError:
-            raise HTTPException(status_code=400, detail=f"Invalid date_to: {date_to!r}")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid date_to: {date_to!r}")
 
     query = query.order_by(desc(NewsArticle.fetched_at)).offset(skip).limit(limit)
     result = await db.execute(query)
@@ -83,7 +83,11 @@ async def list_news(
 
 
 @router.get("/{article_id}", response_model=NewsArticleResponse)
-async def get_article(article_id: int, db: AsyncSession = Depends(get_db)):
+async def get_article(
+    article_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Get a single article."""
     article = await db.get(NewsArticle, article_id)
     if not article:
@@ -107,7 +111,10 @@ async def delete_article(
 
 
 @router.get("/stats/overview")
-async def news_stats(db: AsyncSession = Depends(get_db)):
+async def news_stats(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Return aggregate news statistics."""
     result = await db.execute(select(func.count()).select_from(NewsArticle))
     total = result.scalar()

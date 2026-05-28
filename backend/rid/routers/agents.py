@@ -56,6 +56,7 @@ class PluginResponse(BaseModel):
 async def list_plugins(
     enabled_only: bool = Query(False),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
 ):
     """List all registered plugins."""
     query = select(AgentPlugin)
@@ -119,7 +120,11 @@ async def create_plugin(
 
 
 @router.get("/{plugin_id}", response_model=PluginResponse)
-async def get_plugin(plugin_id: int, db: AsyncSession = Depends(get_db)):
+async def get_plugin(
+    plugin_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     """Get a plugin by ID."""
     plugin = await db.get(AgentPlugin, plugin_id)
     if not plugin:

@@ -326,6 +326,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               <button
                 onClick={onClose}
                 className="flex h-8 w-8 items-center justify-center rounded-radius-md text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary"
+                aria-label="Close menu"
               >
                 <X size={20} />
               </button>

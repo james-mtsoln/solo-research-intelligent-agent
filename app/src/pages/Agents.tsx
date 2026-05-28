@@ -272,7 +272,7 @@ function NewsGathererConfig({ onClose }: { onClose: () => void }) {
             {rssUrls.map((url, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <input className={inputClass} style={{ ...inputStyle, ...(focusedField === `rss-${idx}` ? focusStyle : {}) }} defaultValue={url} onFocus={() => setFocusedField(`rss-${idx}`)} onBlur={() => setFocusedField(null)} />
-                <button onClick={() => setRssUrls((prev) => prev.filter((_, i) => i !== idx))} className="rounded-md p-1 transition-colors hover:opacity-100" style={{ color: C.textMuted }}><X size={14} /></button>
+                <button onClick={() => setRssUrls((prev) => prev.filter((_, i) => i !== idx))} className="rounded-md p-1 transition-colors hover:opacity-100" style={{ color: C.textMuted }} aria-label={t('agents.configPanel.removeUrl')}><X size={14} /></button>
               </div>
             ))}
             <div className="flex items-center gap-2">
@@ -917,6 +917,7 @@ export default function Agents() {
                         disabled={logsPage === 0}
                         className="flex h-8 w-8 items-center justify-center rounded-md border transition-colors disabled:opacity-30"
                         style={{ borderColor: C.borderSubtle, color: C.textSecondary }}
+                        aria-label={t('common.previous')}
                       >
                         <ChevronLeft size={14} />
                       </button>
@@ -925,6 +926,7 @@ export default function Agents() {
                         disabled={logsPage >= totalLogPages - 1}
                         className="flex h-8 w-8 items-center justify-center rounded-md border transition-colors disabled:opacity-30"
                         style={{ borderColor: C.borderSubtle, color: C.textSecondary }}
+                        aria-label={t('common.next')}
                       >
                         <ChevronRight size={14} />
                       </button>
