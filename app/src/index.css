@@ -1,0 +1,129 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* === Design Tokens (v2 — mtsoln.com ultra-dark) === */
+
+    /* Backgrounds */
+    --bg-primary: #0A0A0F;
+    --bg-surface: #13131A;
+    --bg-elevated: #1A1A24;
+    --bg-sidebar: #0D0D14;
+
+    /* Borders */
+    --border-subtle: #1E1E2A;
+    --border-hover: #2A2A3A;
+    --border-active: #38BDF8;
+
+    /* Text */
+    --text-primary: #F0F0F5;
+    --text-secondary: #8A8B9E;
+    --text-tertiary: #5A5B6E;
+    --text-muted: #4A4B5A;
+
+    /* Accents */
+    --accent-cyan: #38BDF8;
+    --accent-blue: #5B5CFF;
+    --accent-blue-hover: #4F4FE5;
+    --accent-cyan-glow: rgba(56, 189, 248, 0.15);
+
+    /* Status */
+    --status-success: #22C55E;
+    --status-warning: #F59E0B;
+    --status-error: #EF4444;
+    --status-info: #3B82F6;
+
+    /* Easing */
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-decelerate: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* shadcn dark variables */
+    --background: 240 10% 4%;
+    --foreground: 240 5% 96%;
+    --card: 240 10% 7%;
+    --card-foreground: 240 5% 96%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 240 5% 96%;
+    --primary: 199 95% 60%;
+    --primary-foreground: 240 10% 4%;
+    --secondary: 240 10% 10%;
+    --secondary-foreground: 240 5% 96%;
+    --muted: 240 10% 10%;
+    --muted-foreground: 240 5% 60%;
+    --accent: 240 10% 10%;
+    --accent-foreground: 240 5% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 14%;
+    --input: 240 10% 14%;
+    --ring: 199 95% 60%;
+    --radius: 0.5rem;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Inter Variable", system-ui, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    @apply border-border-subtle;
+  }
+
+  /* === Custom Scrollbar (dark, minimal) === */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-active);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-hover) transparent;
+  }
+}
+
+@layer utilities {
+  /* Typography utilities */
+  .font-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .font-data-metric {
+    font-family: "JetBrains Mono", monospace;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+}
