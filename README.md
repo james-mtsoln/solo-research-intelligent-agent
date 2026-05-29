@@ -44,6 +44,36 @@
 
 ---
 
+## What Makes RID Different
+
+Most AI tools fall into one of two traps: **chat interfaces** that leave you copy-pasting into documents, or **automation scripts** that run blind and dump unreadable output. RID is neither. It's a **full-stack research operating system** that closes the loop between discovery, analysis, planning, and execution.
+
+| Typical AI Tools | RID |
+|-----------------|-----|
+| Single-shot prompts | **Stateful research pipelines** — multi-step workflows that persist, resume, and iterate |
+| One model, one vendor | **Pluggable agent architecture** — swap LLMs, news sources, and analysis engines without rewriting code |
+| Output goes to a chat log | **Structured business plans + milestones** — research becomes actionable deliverables with deadlines |
+| API keys in `.env` files | **RBAC-protected settings** — role-based access control with automatic redaction of sensitive credentials |
+| "Run this Python script" | **React dashboard + FastAPI backend** — a real application, not a notebook |
+
+### Three Architectural Bets
+
+**1. Research as a Pipeline, Not a Prompt**
+RID treats research as a multi-stage pipeline: news gathering → sentiment analysis → trend detection → strategic planning. Each stage is an independent agent with its own configuration, retry logic, and observability. You don't just "ask AI for a plan" — you orchestrate a research process.
+
+**2. Plans Are First-Class Citizens**
+Most tools generate text. RID generates **Business Plans with Milestones** — structured data with statuses, priorities, target dates, and owner assignments. Research isn't the end product; it's the input to an ongoing operational plan.
+
+**3. Security by Design, Not Afterthought**
+- JWT authentication with role-based guards (admin/editor/viewer)
+- API keys redacted from non-admin users at the API layer
+- Settings endpoints require active authentication — no "public config" leaks
+- All database operations use async SQLAlchemy with proper session management
+
+> **RID doesn't help you chat with AI. It helps you run a research team where AI is the analyst, the writer, and the planner — under your control, in your infrastructure, with your data.**
+
+---
+
 ## Overview
 
 The **Research Intelligence Dashboard (RID)** is a standalone, full-stack AI research assistant designed for analysts, strategists, and teams who need to monitor ongoing topics, plan business cycles, and synthesize intelligence from multiple sources — all within a single, privacy-respecting platform.
