@@ -55,7 +55,7 @@ RID consists of two components: a **backend** (Python) and a **frontend** (Node.
 #### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/rid.git
+git clone https://github.com/james-mtsoln/solo-research-intelligent-agent.git
 cd rid
 ```
 
